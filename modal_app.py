@@ -1,5 +1,5 @@
 import modal
-
+from download_manager import download_all_models
 app = modal.App("luganda-folk-generator")
 
 # 1. Define the Image/Environment
@@ -20,9 +20,8 @@ image = (
     
     # 🌟 CRITICAL: Run the model download during image build WITH secrets
     .run_function(
-        lambda: __import__("download_manager").download_all_models(),
-        secrets=[modal.Secret.from_name("bag2")]  # Add secrets here!
-    )
+        download_all_models,
+        secrets=[modal.Secret.from_name("bag2")]
 )
 
 # 2. Define the Function/App
