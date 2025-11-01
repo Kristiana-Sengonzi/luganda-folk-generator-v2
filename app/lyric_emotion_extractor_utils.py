@@ -20,7 +20,7 @@ class LyricEmotionExtractor:
             'anger': 'tension',
             'fear': 'tension',
             'disgust': 'solemnity',
-            'surprise': 'amazement',
+            'surprise': 'joyful_activation',
             'neutral': 'calmness'
         }
         
@@ -82,7 +82,6 @@ class LyricEmotionExtractor:
         print(f" Processing {len(lines)} lyric lines...")
         
         for i, line in enumerate(lines):
-            print(f"   Analyzing line {i+1}/{len(lines)}: '{line}'")
             
             # Step 1: Classify emotion
             emotion_result = self.classify_line_emotion(line)
