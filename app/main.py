@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
-from app.audio_utils.py import SmallAudioVAE
+from app.audio_utils import SmallAudioVAE
 load_dotenv()
 
 from fastapi import FastAPI, Request, HTTPException, Depends, Form
