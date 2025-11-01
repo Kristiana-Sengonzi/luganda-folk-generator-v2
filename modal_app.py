@@ -32,16 +32,7 @@ image = (
     timeout=3600,
     allow_concurrent_inputs=10,
 )
-def run_app():
-    """This function starts your FastAPI web service."""
-    # Models are already downloaded during image build, so just start the server
-    import subprocess
-    subprocess.run([
-        "uvicorn", "app.main:app", 
-        "--host", "0.0.0.0", 
-        "--port", "8000", 
-        "--workers", "1"
-    ])
+
 
 @modal.asgi_app()
 def fastapi_app():
