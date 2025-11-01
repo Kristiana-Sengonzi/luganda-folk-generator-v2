@@ -21,7 +21,7 @@ image = (
         "torch", 
         "torchvision", 
         "torchaudio",
-        index_url:"https://download.pytorch.org/whl/cu121"
+        index_url: "https://download.pytorch.org/whl/cu121"
     )
     # Install dependencies from your local requirements file
     .pip_install_from_requirements("requirements.txt")
