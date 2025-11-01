@@ -1,5 +1,6 @@
 import modal
 from download_models import download_all_models
+from app.audio_utils import SmallAudioVAE
 app = modal.App("luganda-folk-generator")
 
 # 1. Define the Image/Environment
