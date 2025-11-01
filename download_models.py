@@ -26,7 +26,7 @@ def download_all_models():
         snapshot_download(
             repo_id=repo_id,
             local_dir=local_dir,
-            token=os.getenv("HF_TOKEN")
+            token=os.getenv("HUGGINGFACE_HUB_TOKEN")
         )
         print(f" {model_name} downloaded!")
 
