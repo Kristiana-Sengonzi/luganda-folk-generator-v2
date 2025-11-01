@@ -69,7 +69,7 @@ class ModelsManager:
             self._vae_model.eval()
         
         print(" Audio VAE loaded!")
-    return self._vae_model
+        return self._vae_model
     # -------------------------
     # Hartmann emotion classifier
     # -------------------------
