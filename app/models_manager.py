@@ -1,5 +1,7 @@
 import torch
+from app.audio_utils import SmallAudioVAE
 import torch.nn as nn
+import torch.serialization
 import torch.nn.functional as F
 import numpy as np
 import soundfile as sf
