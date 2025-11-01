@@ -1,13 +1,15 @@
 import json
 import os
 from app.audio_features_utils import get_audio_features
+from transformers import pipeline
+from app.config import HARTMANN_EMOTION_PATH
 
 class LyricEmotionExtractor:
     def __init__(self):
         # Load Hartmann emotion model
         self.emotion_classifier = pipeline(
             "text-classification",
-            model="/kaggle/input/j-hartmann/j hartmann",
+            model=HARTMANN_EMOTION_PATH,
             device=-1 
         )
         
