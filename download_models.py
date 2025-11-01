@@ -21,7 +21,7 @@ def download_all_models():
     for model_name, repo_id in models_to_download.items():
         print(f" Downloading {model_name}...")
         
-        local_dir = f"/folkstory-app/models/{model_name}"
+        local_dir = f"/root/models/{model_name}"
         os.makedirs(local_dir, exist_ok=True)
         snapshot_download(
             repo_id=repo_id,
