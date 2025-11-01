@@ -22,7 +22,7 @@ image = (
         "torch", 
         "torchvision", 
         "torchaudio",
-        index_urls=["https://download.pytorch.org/whl/cu121"]
+        index_url=["https://download.pytorch.org/whl/cu121"]
     )
     # Replaces: pip install -r requirements.txt
     .pip_install_from_requirements("requirements.txt")
