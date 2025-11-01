@@ -52,9 +52,9 @@ class ModelsManager:
             if not os.path.exists(AUDIO_VAE_PATH):
                 raise FileNotFoundError(f"Model not found at {AUDIO_VAE_PATH}")
 
-        # Load the entire model (full model, not state_dict)
-            self._vae_model = torch.load(AUDIO_VAE_PATH, map_location=self.device)
-            self._vae_model.eval()
+            with torch.serialization.add_safe_globals([SmallAudioVAE]):
+                self._vae_model = torch.load(AUDIO_VAE_PATH, map_location=self.device)
+                self._vae_model.eval()
         
         print(" Audio VAE loaded!")
         return self._vae_model
