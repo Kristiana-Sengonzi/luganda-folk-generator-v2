@@ -17,7 +17,7 @@ image = (
         index_url="https://download.pytorch.org/whl/cu121"
     )
     .pip_install_from_requirements("requirements.txt")
-    
+    .add_local_dir(".", "/root")
     # 🌟 CRITICAL: Run the model download during image build WITH secrets
     .run_function(
         download_all_models,
