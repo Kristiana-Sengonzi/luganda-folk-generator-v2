@@ -1,6 +1,7 @@
 import numpy as np
 import soundfile as sf
 import torch
+from app.audio_utils import  SmallAudioVAE
 from tqdm import tqdm
 
 # =========================================================
