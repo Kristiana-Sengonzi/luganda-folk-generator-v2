@@ -48,12 +48,14 @@ class ModelsManager:
     # Audio VAE
     # -------------------------
     def load_audio_vae(self):
+    
+        import torch
         if self._vae_model is None:
             print(" Loading full audio VAE model...")
 
             if not os.path.exists(AUDIO_VAE_PATH):
                 raise FileNotFoundError(f"Model not found at {AUDIO_VAE_PATH}")
-
+            from app.audio_utils import SmallAudioVAE
             with torch.serialization.add_safe_globals([SmallAudioVAE]):
                 self._vae_model = torch.load(AUDIO_VAE_PATH, map_location=self.device)
                 self._vae_model.eval()
