@@ -92,7 +92,7 @@ def generate(
         
         # 1. Generate story
         logger.info(" Generating story...")
-        story_model, story_tokenizer = models_manager.load_story_generator()
+        
         
         prompt = (
             f"Theme(s): {theme}\n"
@@ -100,23 +100,14 @@ def generate(
             "that teaches this moral value. Avoid repeating sentences or phrases."
         )
         
-        inputs = story_tokenizer(prompt, return_tensors="pt").to(story_model.device)
-        output_ids = story_model.generate(
-            **inputs,
-            max_new_tokens=300,
-            temperature=0.8,
-            top_p=0.9,
-            do_sample=True,
-            repetition_penalty=1.8,
-            no_repeat_ngram_size=4,
-            pad_token_id=story_tokenizer.eos_token_id
-        )
-        story = story_tokenizer.decode(output_ids[0], skip_special_tokens=True)
+        
+       
+        story = vllm_manager.generate_story(prompt)
         logger.info(" Story generated!")
 
         # 2. Generate lyrics (English)
         logger.info("Generating lyrics...")
-        lyric_model, lyric_tokenizer = models_manager.load_lyric_generator()
+    
         
         lyric_prompt = f"""Create a complete folksong based on this story. Include [Verse], [Chorus], [Call], and [Response] sections.
 
@@ -127,19 +118,8 @@ Story: {story}
 
 Start"""
         
-        inputs = lyric_tokenizer(lyric_prompt, return_tensors="pt", truncation=True, max_length=1024)
-        inputs = {k: v.to(lyric_model.device) for k, v in inputs.items()}
         
-        output_ids = lyric_model.generate(
-            **inputs,
-            max_new_tokens=512,
-            do_sample=True,
-            temperature=0.8,
-            top_p=0.9,
-            repetition_penalty=1.2,
-            pad_token_id=lyric_tokenizer.eos_token_id
-        )
-        generated_lyrics = lyric_tokenizer.decode(output_ids[0], skip_special_tokens=True).split("Folksong:")[-1].strip()
+        generated_lyrics = vllm_manager.generate_lyrics(lyric_prompt)
         logger.info(" Lyrics generated!")
 
         # 3. Process lyrics for emotion and audio generation
