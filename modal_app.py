@@ -17,7 +17,7 @@ image = (
     # Replaces: ln -s /usr/bin/python3.10 /usr/bin/python
     .run_commands("ln -sf /usr/bin/python3.10 /usr/bin/python")
     # Replaces: pip install --upgrade pip
-    .pip_install("--upgrade", "pip")
+    
     # Replaces: pip install torch...
     .pip_install(
         "torch", 
