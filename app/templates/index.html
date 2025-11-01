@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Luganda Folk Song Generator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-10">
+<div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+  <h1 class="text-2xl font-bold mb-4">Luganda Folk Song Generator</h1>
+
+  <label for="theme" class="block mb-2 font-semibold">Select Theme:</label>
+  <select id="theme" class="border p-2 w-full mb-4">
+    {% for t in themes %}
+    <option value="{{t}}">{{t}}</option>
+    {% endfor %}
+  </select>
+
+  
+  <button id="generateBtn" class="bg-blue-600 text-white px-4 py-2 rounded">Generate</button>
+
+  <div id="result" class="mt-6"></div>
+</div>
+
+<script>
+document.getElementById("generateBtn").onclick = async function() {
+    const theme = document.getElementById("theme").value;
+    
+
+    const formData = new FormData();
+    formData.append("theme", theme);
+
+    const resDiv = document.getElementById("result");
+    resDiv.innerHTML = "Processing... This may take a while.";
+
+    try {
+        const response = await fetch("/generate", {
+            method: "POST",
+            body: formData
+        });
+        const data = await response.json();
+
+        resDiv.innerHTML = `
+            <h2 class="text-xl font-bold mt-4">Story</h2>
+            <pre>${data.story}</pre>
+            <h2 class="text-xl font-bold mt-4">Lyrics (English)</h2>
+            <pre>${data.lyrics_en}</pre>
+            <h2 class="text-xl font-bold mt-4">Lyrics (Luganda)</h2>
+            <pre>${data.lyrics_lg}</pre>
+            <h2 class="text-xl font-bold mt-4">Audio</h2>
+            <audio controls src="${data.audio_path}"></audio>
+        `;
+    } catch(e) {
+        resDiv.innerHTML = "Error: " + e;
+    }
+};
+</script>
+</body>
+</html>
+

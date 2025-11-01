@@ -1,0 +1,44 @@
+
+
+name: Modal CI/CD Deploy
+
+on:
+  push:
+    branches:
+      - main # Change this branch name if your main branch is called 'master' or something else
+
+jobs:
+  deploy:
+    name: Deploy to Modal
+    runs-on: ubuntu-latest
+    
+    # Define environment variables using the secrets we created in Step 2
+    env:
+      MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+      MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+
+    steps:
+    - name: Checkout Repository
+      # Checks out the code to the runner environment
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      # Modal applications are typically Python, so we set up the environment
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' # Use your desired Python version
+        
+    - name: Install Modal CLI
+      # Install the Modal client library
+      run: pip install modal
+      
+    - name: Run Modal Deploy
+      # This is the core command that deploys your application to Modal.
+      # Replace 'my_app.py' with the actual file name of your Modal application entrypoint.
+      # Use the '--name' flag if you want to explicitly name your deployed application.
+      run: modal deploy modal_app.py 
+      
+    - name: Check Deployment Status
+      # A simple step to ensure the command finished successfully
+      if: failure()
+      run: echo "Modal deployment failed!" && exit 1

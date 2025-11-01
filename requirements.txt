@@ -1,0 +1,17 @@
+torch
+transformers
+peft
+pandas
+numpy
+tqdm
+librosa
+noisereduce
+soundfile
+matplotlib
+fastapi
+uvicorn[standard]
+jinja2
+python-multipart
+pydantic
+vllm>=0.2.0
+huggingface-hub
