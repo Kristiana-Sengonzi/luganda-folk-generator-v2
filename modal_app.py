@@ -7,9 +7,9 @@ image = (
     modal.Image.debian_slim(python_version="3.10")
     # Replaces: apt-get install commands
     .apt_install(
-        "python3.10",
+        "python3",
         "python3-pip", 
-        "python3.10-venv",
+        "python3-venv",
         "git",
         "ffmpeg",
         "libsndfile1"
