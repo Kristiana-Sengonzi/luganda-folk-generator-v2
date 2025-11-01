@@ -1,6 +1,6 @@
 import modal
 # IMPORTANT: This line is required to reference the download function during the image build
-from . import download_models 
+import download_models 
 
 app = modal.App("luganda-folk-generator")
 
