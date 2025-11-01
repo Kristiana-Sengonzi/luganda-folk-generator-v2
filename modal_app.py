@@ -16,15 +16,13 @@ image = (
     )
     # Replaces: ln -s /usr/bin/python3.10 /usr/bin/python
     .run_commands("ln -sf /usr/bin/python3.10 /usr/bin/python")
-    # Replaces: pip install --upgrade pip
-    
+   
     # Replaces: pip install torch...
     .pip_install(
         "torch", 
         "torchvision", 
         "torchaudio",
-        "--index-url", 
-        "https://download.pytorch.org/whl/cu121"
+        index_urls=["https://download.pytorch.org/whl/cu121"]
     )
     # Replaces: pip install -r requirements.txt
     .pip_install_from_requirements("requirements.txt")
