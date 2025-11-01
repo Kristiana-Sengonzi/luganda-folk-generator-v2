@@ -14,8 +14,8 @@ class VLLMManager:
         if self.llm_engine is None:
             print("🚀 Initializing vLLM engine for LLM models...")
             self.llm_engine = LLM(
-                model="your-username/luganda-llama-3.2-3b",  # Base model from HF
-                tokenizer="your-username/luganda-llama-3.2-3b",
+                model="krisseng/luganda-llama-3.2-3b",  # Base model from HF
+                tokenizer="krisseng/luganda-llama-3.2-3b",
                 tensor_parallel_size=1,
                 gpu_memory_utilization=0.85,
                 max_model_len=4096,
