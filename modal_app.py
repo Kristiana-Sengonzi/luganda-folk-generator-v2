@@ -5,7 +5,6 @@ app = modal.App("luganda-folk-generator")
 # Direct conversion of your Dockerfile
 image = (
     modal.Image.debian_slim(python_version="3.10")
-    # Replaces: apt-get install commands
     .apt_install(
         "python3",
         "python3-pip", 
@@ -19,9 +18,7 @@ image = (
    
     # Replaces: pip install torch...
     .pip_install(
-        "torch", 
-        "torchvision", 
-        "torchaudio",
+        ["torch", "torchvision", "torchaudio"],
         index_url=["https://download.pytorch.org/whl/cu121"]
     )
     # Replaces: pip install -r requirements.txt
