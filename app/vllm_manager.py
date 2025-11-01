@@ -2,7 +2,7 @@
 import torch
 from vllm import LLM, SamplingParams
 from vllm.lora.request import LoRARequest
-from app.config import STORY_GENERATOR_PATH, LYRIC_GENERATOR_PATH
+from app.config import STORY_GENERATOR_PATH, LYRIC_GENERATOR_PATH,BASE_MODEL_PATH
 
 class VLLMManager:
     def __init__(self):
