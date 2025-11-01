@@ -42,7 +42,7 @@ class VLLMManager:
         outputs = self.llm_engine.generate(
             [prompt],
             sampling_params,
-            lora_request=LoRARequest(STORY_GENERATOR_PATH, 1)  # Story LoRA
+            lora_request=LoRARequest("story_lora",1,STORY_GENERATOR_PATH)  # Story LoRA
         )
         
         return outputs[0].outputs[0].text
@@ -62,7 +62,7 @@ class VLLMManager:
         outputs = self.llm_engine.generate(
             [prompt],
             sampling_params,
-            lora_request=LoRARequest(LYRIC_GENERATOR_PATH, 2)  # Lyric LoRA
+            lora_request=LoRARequest("lyric_lora",2,LYRIC_GENERATOR_PATH)  # Lyric LoRA
         )
         
         return outputs[0].outputs[0].text
