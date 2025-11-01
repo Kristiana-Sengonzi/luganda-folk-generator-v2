@@ -39,6 +39,12 @@ image = (
     timeout=3600, # 1 hour timeout for long running tasks
     allow_concurrent_inputs=10,
 )
+def download_model():
+    import os
+    from download_models import download_model_func
+    
+    hf_token = os.getenv("HUGGINGFACE_HUB_TOKEN")
+    download_model_func(hf_token)
 @modal.asgi_app()
 def fastapi_app():
     """This function starts your FastAPI web service."""
