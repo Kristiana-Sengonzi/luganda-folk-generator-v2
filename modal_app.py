@@ -1,43 +1,51 @@
 import modal
+# IMPORTANT: This line is required to reference the download function during the image build
+from . import download_models 
 
 app = modal.App("luganda-folk-generator")
 
-# Direct conversion of your Dockerfile
+# 1. Define the Image/Environment
+# Using modal.Image is cleaner and faster than manual Dockerfile steps.
 image = (
     modal.Image.debian_slim(python_version="3.10")
+    # Install necessary OS packages (like ffmpeg for audio)
+    # We remove the redundant python3/pip apt installs.
     .apt_install(
-        "python3",
-        "python3-pip", 
-        "python3-venv",
         "git",
-        "ffmpeg",
+        "ffmpeg", 
         "libsndfile1"
     )
-    # Replaces: ln -s /usr/bin/python3.10 /usr/bin/python
-    .run_commands("ln -sf /usr/bin/python3.10 /usr/bin/python")
-   
-    # Replaces: pip install torch...
+    # Correctly installing PyTorch and related packages.
+    # The --index-url is passed via extra_options to avoid the InvalidError.
     .pip_install(
-        ["torch", "torchvision", "torchaudio"],
-        index_url=["https://download.pytorch.org/whl/cu121"]
+        "torch", 
+        "torchvision", 
+        "torchaudio",
+        extra_options=[
+            "--index-url", 
+            "https://download.pytorch.org/whl/cu121"
+        ]
     )
-    # Replaces: pip install -r requirements.txt
+    # Install dependencies from your local requirements file
     .pip_install_from_requirements("requirements.txt")
-    # Replaces: COPY . . (Modal does this automatically)
+    
+    # 🌟 CRITICAL FIX: Run the model download function during the image build.
+    # This "bakes" the large model into the image, eliminating slow cold starts.
+    .run_function(download_models.download_all_models)
 )
 
+# 2. Define the Function/App
 @app.function(
     image=image,
-    gpu="A100",  # Modal provides CUDA automatically
-    secrets=[modal.Secret.from_name("bag")],
-    timeout=3600  # 1 hour for model downloads
+    gpu="A100", # Modal handles CUDA drivers automatically
+    secrets=[modal.Secret.from_name("bag")], # Uses your correctly named secret
+    timeout=3600, # 1 hour timeout for long running tasks
+    allow_concurrent_inputs=10,
 )
 @modal.asgi_app()
 def fastapi_app():
-    """Replaces: CMD ["python", "download_models.py"]"""
-    # This runs your download_models.py and starts FastAPI
-    from download_models import download_all_models
-    download_all_models()
+    """This function starts your FastAPI web service."""
+    # Since download_all_models ran during the image build, the model is ready!
     
     from app.main import app as fastapi_app
     return fastapi_app
