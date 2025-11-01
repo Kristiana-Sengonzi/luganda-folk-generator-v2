@@ -12,7 +12,7 @@ class VLLMManager:
     def initialize_llm(self):
         """Initialize vLLM engine with LoRA support - LLM MODELS ONLY"""
         if self.llm_engine is None:
-            print("🚀 Initializing vLLM engine for LLM models...")
+            print("Initializing vLLM engine for LLM models...")
             self.llm_engine = LLM(
                 model=BASE_MODEL_PATH,  
                 tokenizer=BASE_MODEL_PATH,
