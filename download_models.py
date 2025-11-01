@@ -2,9 +2,10 @@
 import os
 import subprocess
 import sys
-from huggingface_hub import snapshot_download
+
 
 def download_all_models():
+    from huggingface_hub import snapshot_download
     """Download ALL models from Hugging Face"""
     print("🚀 Starting model downloads...")
     
