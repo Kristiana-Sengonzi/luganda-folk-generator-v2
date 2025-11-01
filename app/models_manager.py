@@ -47,27 +47,14 @@ class ModelsManager:
     # -------------------------
     def load_audio_vae(self):
         if self._vae_model is None:
-            print(" Loading audio VAE...")
-        
-        
-        # Create model instance with the same architecture
-            self._vae_model = SmallAudioVAE(
-                input_dim=16000*5,
-                latent_dim=32, 
-                num_instruments=6
-            )
-        
-       
-            state_dict = torch.load(
-                AUDIO_VAE_PATH, 
-                map_location=self.device, 
-                weights_only=False
-            )
-        
-        
-            self._vae_model.load_state_dict(state_dict)
-            self._vae_model.to(self.device)
-            self._vae_model.eval()
+        print(" Loading full audio VAE model...")
+
+        if not os.path.exists(AUDIO_VAE_PATH):
+            raise FileNotFoundError(f"Model not found at {AUDIO_VAE_PATH}")
+
+        # Load the entire model (full model, not state_dict)
+        self._vae_model = torch.load(AUDIO_VAE_PATH, map_location=self.device)
+        self._vae_model.eval()
         
         print(" Audio VAE loaded!")
         return self._vae_model
