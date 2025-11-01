@@ -31,8 +31,7 @@ image = (
     image=image,
     gpu="A100",
     secrets=[modal.Secret.from_name("bag2")],
-    timeout=3600,
-    allow_concurrent_inputs=10,
+    timeout=3600
 )
 
 
