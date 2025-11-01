@@ -1,54 +1,51 @@
 import modal
-# IMPORTANT: This line is required to reference the download function during the image build
-import download_models 
 
 app = modal.App("luganda-folk-generator")
 
 # 1. Define the Image/Environment
-# Using modal.Image is cleaner and faster than manual Dockerfile steps.
 image = (
     modal.Image.debian_slim(python_version="3.10")
-    # Install necessary OS packages (like ffmpeg for audio)
-    # We remove the redundant python3/pip apt installs.
     .apt_install(
         "git",
         "ffmpeg", 
         "libsndfile1"
     )
-    # Correctly installing PyTorch and related packages.
-    # The --index-url is passed via extra_options to avoid the InvalidError.
     .pip_install(
         "torch", 
         "torchvision", 
         "torchaudio",
         index_url="https://download.pytorch.org/whl/cu121"
     )
-    # Install dependencies from your local requirements file
     .pip_install_from_requirements("requirements.txt")
     
-    # 🌟 CRITICAL FIX: Run the model download function during the image build.
-    # This "bakes" the large model into the image, eliminating slow cold starts.
-    .run_function(download_models.download_all_models)
+    # 🌟 CRITICAL: Run the model download during image build WITH secrets
+    .run_function(
+        lambda: __import__("download_manager").download_all_models(),
+        secrets=[modal.Secret.from_name("bag2")]  # Add secrets here!
+    )
 )
 
 # 2. Define the Function/App
 @app.function(
     image=image,
-    gpu="A100", # Modal handles CUDA drivers automatically
-    secrets=[modal.Secret.from_name("bag2")], # Uses your correctly named secret
-    timeout=3600, # 1 hour timeout for long running tasks
+    gpu="A100",
+    secrets=[modal.Secret.from_name("bag2")],
+    timeout=3600,
     allow_concurrent_inputs=10,
 )
-def download_model():
-    import os
-    from download_models import download_model_func
-    
-    hf_token = os.getenv("HUGGINGFACE_HUB_TOKEN")
-    download_model_func(hf_token)
+def run_app():
+    """This function starts your FastAPI web service."""
+    # Models are already downloaded during image build, so just start the server
+    import subprocess
+    subprocess.run([
+        "uvicorn", "app.main:app", 
+        "--host", "0.0.0.0", 
+        "--port", "8000", 
+        "--workers", "1"
+    ])
+
 @modal.asgi_app()
 def fastapi_app():
-    """This function starts your FastAPI web service."""
-    # Since download_all_models ran during the image build, the model is ready!
-    
+    """ASGI app for web serving"""
     from app.main import app as fastapi_app
     return fastapi_app
