@@ -35,7 +35,7 @@ image = (
 @app.function(
     image=image,
     gpu="A100", # Modal handles CUDA drivers automatically
-    secrets=[modal.Secret.from_name("bag")], # Uses your correctly named secret
+    secrets=[modal.Secret.from_name("bag2")], # Uses your correctly named secret
     timeout=3600, # 1 hour timeout for long running tasks
     allow_concurrent_inputs=10,
 )
