@@ -1,5 +1,5 @@
 import modal
-from download_modules import download_all_models
+from download_models import download_all_models
 app = modal.App("luganda-folk-generator")
 
 # 1. Define the Image/Environment
