@@ -43,17 +43,33 @@ class ModelsManager:
     # Audio VAE
     # -------------------------
     def load_audio_vae(self):
-        if self._vae_model is None:
-            print(" Loading audio VAE...")
-            self._vae_model = torch.load(
-                AUDIO_VAE_PATH, 
-                map_location=self.device, 
-                weights_only=False
-            )
-            self._vae_model.eval()
-            print(" Audio VAE loaded!")
-        return self._vae_model
-
+    if self._vae_model is None:
+        print(" Loading audio VAE...")
+        
+        # First import and create the model architecture
+        from app.audio_utils import SmallAudioVAE
+        
+        # Create model instance with the same architecture
+        self._vae_model = SmallAudioVAE(
+            input_dim=16000*5,
+            latent_dim=32, 
+            num_instruments=6
+        )
+        
+        # Load the trained weights
+        state_dict = torch.load(
+            AUDIO_VAE_PATH, 
+            map_location=self.device, 
+            weights_only=False
+        )
+        
+        # Load state dict into the model
+        self._vae_model.load_state_dict(state_dict)
+        self._vae_model.to(self.device)
+        self._vae_model.eval()
+        
+        print(" Audio VAE loaded!")
+    return self._vae_model
     # -------------------------
     # Hartmann emotion classifier
     # -------------------------
