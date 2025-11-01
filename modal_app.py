@@ -22,7 +22,7 @@ image = (
     .run_function(
         download_all_models,
         secrets=[modal.Secret.from_name("bag2")]
-)
+))
 
 # 2. Define the Function/App
 @app.function(
