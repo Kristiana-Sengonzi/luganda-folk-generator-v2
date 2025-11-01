@@ -1,6 +1,5 @@
 import modal
 from download_models import download_all_models
-from app.audio_utils import SmallAudioVAE
 app = modal.App("luganda-folk-generator")
 
 # 1. Define the Image/Environment
@@ -39,5 +38,6 @@ image = (
 @modal.asgi_app()
 def fastapi_app():
     """ASGI app for web serving"""
+    from app.audio_utils import SmallAudioVAE
     from app.main import app as fastapi_app
     return fastapi_app
