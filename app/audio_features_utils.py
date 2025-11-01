@@ -4,7 +4,7 @@ import os
 
 # Path to your emotion profile JSON (mounted in container)
 
-EMOTION_JSON_PATH = "models/classical_emotion_features.json"
+EMOTION_JSON_PATH = "app/classical_emotion_features.json"
 
 # Load data once at startup
 if not os.path.exists(EMOTION_JSON_PATH):

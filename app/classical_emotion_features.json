@@ -1,0 +1,66 @@
+{
+  "emotion_profiles": {
+    "solemnity": {
+      "avg_tempo": 113.61754918865336,
+      "avg_energy": 0.08824220160022378,
+      "std_tempo": 23.62659935774984,
+      "std_energy": 0.030313272064899418,
+      "sample_count": 8
+    },
+    "tenderness": {
+      "avg_tempo": 111.43056162587413,
+      "avg_energy": 0.0729522742331028,
+      "std_tempo": 8.518195216981743,
+      "std_energy": 0.025142265948598894,
+      "sample_count": 3
+    },
+    "nostalgia": {
+      "avg_tempo": 116.5039454431438,
+      "avg_energy": 0.07968458756804467,
+      "std_tempo": 31.378391218331906,
+      "std_energy": 0.026167834220332697,
+      "sample_count": 10
+    },
+    "calmness": {
+      "avg_tempo": 115.12593149081572,
+      "avg_energy": 0.07788393082363265,
+      "std_tempo": 35.38210938464599,
+      "std_energy": 0.018638704248829904,
+      "sample_count": 35
+    },
+    "power": {
+      "avg_tempo": 105.41781721443965,
+      "avg_energy": 0.0901593305170536,
+      "std_tempo": 15.257464682929452,
+      "std_energy": 0.015599886810966388,
+      "sample_count": 4
+    },
+    "joyful_activation": {
+      "avg_tempo": 132.06199852508536,
+      "avg_energy": 0.0954415122828176,
+      "std_tempo": 27.749770206403376,
+      "std_energy": 0.027437914892539397,
+      "sample_count": 31
+    },
+    "tension": {
+      "avg_tempo": 125.45202872360171,
+      "avg_energy": 0.08427161909639835,
+      "std_tempo": 18.963426171011264,
+      "std_energy": 0.014494264651368285,
+      "sample_count": 6
+    },
+    "sadness": {
+      "avg_tempo": 132.28414633242411,
+      "avg_energy": 0.06969079126914342,
+      "std_tempo": 34.81529432671271,
+      "std_energy": 0.017856834511901773,
+      "sample_count": 3
+    }
+  },
+  "metadata": {
+    "total_tracks_analyzed": 100,
+    "audio_dir": "/kaggle/input/emotify/emotifymusic/classical",
+    "genre_filter": "classical",
+    "created_at": "2025-10-23T15:34:25.740728"
+  }
+}
