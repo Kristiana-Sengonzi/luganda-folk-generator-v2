@@ -23,8 +23,23 @@ class VLLMManager:
                 max_lora_rank=64,
                 max_loras=4
             )
+            print("📥 Loading LoRA adapters...")
+            try:
+                # Register story LoRA
+                self.llm_engine.add_lora("story_lora", STORY_GENERATOR_PATH)
+                print(" Story LoRA loaded!")
+                
+                # Register lyric LoRA
+                self.llm_engine.add_lora("lyric_lora", LYRIC_GENERATOR_PATH)
+                print(" Lyric LoRA loaded!")
+                
+            except Exception as e:
+                print(f" Failed to load LoRA adapters: {e}")
+                raise
+            
             print("✅ vLLM engine initialized with LoRA support!")
         return self.llm_engine
+        
 
     def generate_story(self, prompt, max_tokens=300):
         """Generate story using story LoRA adapter"""
@@ -41,7 +56,7 @@ class VLLMManager:
         outputs = self.llm_engine.generate(
             [prompt],
             sampling_params,
-            lora_request=LoRARequest(STORY_GENERATOR_PATH, 1)  # Story LoRA
+            lora_request=LoRARequest("story_lora", 1)  # Story LoRA
         )
         
         return outputs[0].outputs[0].text
@@ -61,7 +76,7 @@ class VLLMManager:
         outputs = self.llm_engine.generate(
             [prompt],
             sampling_params,
-            lora_request=LoRARequest(LYRIC_GENERATOR_PATH, 2)  # Lyric LoRA
+            lora_request=LoRARequest("lyric_lora", 2)  # Lyric LoRA
         )
         
         return outputs[0].outputs[0].text
