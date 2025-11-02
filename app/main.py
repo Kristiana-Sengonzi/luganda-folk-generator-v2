@@ -111,14 +111,28 @@ def generate(
         logger.info("Generating lyrics...")
     
         
-        lyric_prompt = f"""Create a complete folksong based on this story. Include [Verse], [Chorus], [Call], and [Response] sections.
+        lyric_prompt = f"""INSTRUCTION: Create a folksong based on this story. Use ONLY this format:
 
-        Begin the song with "Start" and end with "End".
-        Output ONLY the content between "Start" and "End" - no explanations before or after.
+        Start
+        [Verse]
+        [lyrics here]
+        [Chorus] 
+        [lyrics here]
+        [Call]
+        [lyrics here] 
+        [Response]
+        [lyrics here]
+        End
 
-        Story: {story}
+        STORY: {story}
 
-        Start"""
+        IMPORTANT: 
+        - Start with exactly "Start"
+        - End with exactly "End" 
+        - Use ONLY the sections above
+        - No other text before or after
+        - No explanations
+        """
         
         
         generated_lyrics = vllm_manager.generate_lyrics(lyric_prompt)
