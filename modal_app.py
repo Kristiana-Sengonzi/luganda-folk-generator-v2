@@ -18,8 +18,6 @@ image = (
     )
     .pip_install_from_requirements("requirements.txt")
     
-    .add_local_dir(".", "/root",copy=True) 
-   
     .run_function(
         download_all_models,
         secrets=[modal.Secret.from_name("bag2")]
