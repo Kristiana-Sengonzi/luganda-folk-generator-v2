@@ -13,6 +13,11 @@ from huggingface_hub import login
 from app.audio_vae_utils import generate_continuous_audio
 import os
 from dotenv import load_dotenv
+# models_manager.py - ADD THIS AT THE VERY TOP
+import sys
+sys.path.insert(0, '/root')
+sys.path.insert(0, '/root/app')
+from app.audio_utils import SmallAudioVAE
 
 class ModelsManager:
     def __init__(self, device="cpu"):
@@ -56,7 +61,7 @@ class ModelsManager:
 
             try:
             #  FIX: Use add_safe_globals with the correct class path
-                from app.audio_utils import SmallAudioVAE
+                
             
                 with torch.serialization.add_safe_globals([SmallAudioVAE]):
                     self._vae_model = torch.load(AUDIO_VAE_PATH, map_location=self.device)
@@ -94,13 +99,18 @@ class ModelsManager:
             elif isinstance(state_dict, dict) and 'state_dict' in state_dict:
                 state_dict = state_dict['state_dict']
         
-            self._vae_model.load_state_dict(state_dict)
+            self._vae_model.load_state_dict(state_dict,strict=False)
             self._vae_model.to(self.device)
             self._vae_model.eval()
             print(" State dict load successful!")
         
         except Exception as e:
             print(f" State dict load failed: {e}")
+            print(f"Current sys.path: {sys.path}")
+            print(f"Current directory: {os.getcwd()}")
+            print(f"Files in current dir: {os.listdir('.')}")
+            if os.path.exists('app'):
+                print(f"Files in app dir: {os.listdir('app')}")
             raise
     def load_hartmann_model(self):
         if self._hartmann_pipeline is None:
