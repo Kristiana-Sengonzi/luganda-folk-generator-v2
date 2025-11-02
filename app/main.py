@@ -165,12 +165,14 @@ def generate(
         print(f"Current directory: {os.getcwd()}")
         print(f"Files in current directory: {os.listdir('.')}")
 
-if os.path.exists(clean_audio_filename):
-    print(f"✅ Audio file exists: {clean_audio_filename}")
-else:
-    print(f"❌ Audio file NOT FOUND: {clean_audio_filename}")
+        try:
+            if os.path.exists(clean_audio_filename):
+                print(f" Audio file exists: {clean_audio_filename}")
+            else:
+                print(f" Audio file NOT FOUND: {clean_audio_filename}")
 
-logger.info(" Generation complete!")
+        except Exception as e:
+            print(f"Error checking file: {e}")
 
         logger.info(" Generation complete!")
         
