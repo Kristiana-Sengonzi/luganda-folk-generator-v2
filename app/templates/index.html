@@ -26,7 +26,6 @@
 document.getElementById("generateBtn").onclick = async function() {
     const theme = document.getElementById("theme").value;
     
-
     const formData = new FormData();
     formData.append("theme", theme);
 
@@ -42,13 +41,13 @@ document.getElementById("generateBtn").onclick = async function() {
 
         resDiv.innerHTML = `
             <h2 class="text-xl font-bold mt-4">Story</h2>
-            <pre>${data.story}</pre>
+            <div class="bg-gray-50 p-4 rounded whitespace-pre-wrap overflow-x-auto">${data.story}</div>
             <h2 class="text-xl font-bold mt-4">Lyrics (English)</h2>
-            <pre>${data.lyrics_en}</pre>
+            <div class="bg-gray-50 p-4 rounded whitespace-pre-wrap overflow-x-auto">${data.lyrics_en}</div>
             <h2 class="text-xl font-bold mt-4">Lyrics (Luganda)</h2>
-            <pre>${data.lyrics_lg}</pre>
+            <div class="bg-gray-50 p-4 rounded whitespace-pre-wrap overflow-x-auto">${data.lyrics_lg}</div>
             <h2 class="text-xl font-bold mt-4">Audio</h2>
-            <audio controls src="${data.audio_path}"></audio>
+            <audio controls src="${data.audio_path}" class="w-full mt-2"></audio>
         `;
     } catch(e) {
         resDiv.innerHTML = "Error: " + e;
