@@ -113,12 +113,12 @@ def generate(
         
         lyric_prompt = f"""Create a complete folksong based on this story. Include [Verse], [Chorus], [Call], and [Response] sections.
 
-Begin the song with "Start" and end with "End".
-Output ONLY the content between "Start" and "End" - no explanations before or after.
+        Begin the song with "Start" and end with "End".
+        Output ONLY the content between "Start" and "End" - no explanations before or after.
 
-Story: {story}
+        Story: {story}
 
-Start"""
+        Start"""
         
         
         generated_lyrics = vllm_manager.generate_lyrics(lyric_prompt)
@@ -161,6 +161,16 @@ Start"""
         save_audio(waveform, audio_filename)
         clean_audio = denoise_audio(audio_filename, audio_filename.replace(".wav", "_denoised.wav"))
         logger.info(" Audio processing complete!")
+        print(f"Looking for audio file: {clean_audio_filename}")
+        print(f"Current directory: {os.getcwd()}")
+        print(f"Files in current directory: {os.listdir('.')}")
+
+if os.path.exists(clean_audio_filename):
+    print(f"✅ Audio file exists: {clean_audio_filename}")
+else:
+    print(f"❌ Audio file NOT FOUND: {clean_audio_filename}")
+
+logger.info(" Generation complete!")
 
         logger.info(" Generation complete!")
         
