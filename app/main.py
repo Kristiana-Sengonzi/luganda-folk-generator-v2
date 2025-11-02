@@ -157,7 +157,7 @@ Start"""
 
         # 6. Save and denoise audio
         logger.info(" Processing audio...")
-        audio_filename = f"/tmp/{uuid.uuid4()}.wav"
+        audio_filename = f"{uuid.uuid4()}.wav"
         save_audio(waveform, audio_filename)
         clean_audio = denoise_audio(audio_filename, audio_filename.replace(".wav", "_denoised.wav"))
         logger.info(" Audio processing complete!")
@@ -168,7 +168,7 @@ Start"""
             "story": story,
             "lyrics_en": lyrics_en,
             "lyrics_lg": lyrics_lg,
-            "audio_path": clean_audio
+            "audio_path": f"/audio/{os.path.basename(clean_audio)}" 
         }
         
     except Exception as e:
@@ -178,11 +178,18 @@ Start"""
 
 # -------------------------
 # Serve audio files
-# -------------------------
 @app.get("/audio/{filename}")
 def get_audio(filename: str):
-    """Serve generated audio files"""
-    audio_path = f"/tmp/{filename}"
+    """Serve generated audio files from current directory"""
+    # Files are now saved in current directory, not /tmp/
+    audio_path = filename  # Just the filename, since it's in current dir
+    
+    # Security check: ensure filename is safe
+    if '/' in filename or '..' in filename:
+        raise HTTPException(status_code=400, detail="Invalid filename")
+    
     if os.path.exists(audio_path):
-        return FileResponse(audio_path, media_type="audio/wav")
-    raise HTTPException(status_code=404, detail="Audio file not found")
+        return FileResponse(audio_path, media_type="audio/wav", filename=filename)
+    
+    # Also check for files in current directory with the exact name
+    raise HTTPException(status_code=404, detail=f"Audio file {filename} not found")
