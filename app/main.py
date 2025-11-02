@@ -87,7 +87,7 @@ def get_ui(request: Request):
 def generate(
     request: Request,
     theme: str = Form(...),
-):
+    ):
     """Generate story, lyrics, and audio based on theme"""
     try:
         logger.info(f" Generating content for theme: {theme}")
@@ -193,7 +193,12 @@ def generate(
             "lyrics_en": lyrics_en,
             "lyrics_lg": lyrics_lg,
             "audio_path": f"/audio/{os.path.basename(clean_audio)}"
-}
+        }
+except Exception as e: 
+    logger.error(f" Error during generation: {str(e)}")
+    raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
+
+
 # -------------------------
 # Serve audio files
 @app.get("/audio/{filename}")
