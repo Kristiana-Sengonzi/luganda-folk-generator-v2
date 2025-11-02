@@ -18,7 +18,8 @@ image = (
     )
     .pip_install_from_requirements("requirements.txt")
     
-    # 🌟 CRITICAL: Run the model download during image build WITH secrets
+    .add_local_dir(".", "/root") 
+   
     .run_function(
         download_all_models,
         secrets=[modal.Secret.from_name("bag2")]
