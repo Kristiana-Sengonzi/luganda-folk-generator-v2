@@ -13,6 +13,7 @@ from app.audio_vae_utils import generate_continuous_audio
 from app.vllm_manager import vllm_manager
 from app.lyric_utils import extract_pure_lyrics
 from app.lyric_emotion_extractor_utils import LyricEmotionExtractor
+from app .audio_utils import SmallAudioVAE
 from app.translation_utils import translate_lyrics_to_luganda
 import os
 import uuid
@@ -139,6 +140,7 @@ Start"""
 
         # 5. Generate audio using VAE
         logger.info(" Generating audio...")
+        
         vae_model = models_manager.load_audio_vae()
 
         waveform = generate_continuous_audio(
