@@ -48,19 +48,38 @@ class ModelsManager:
     # Audio VAE
     # -------------------------
     def load_audio_vae(self):
-    
-        import torch
         if self._vae_model is None:
-            print(" Loading full audio VAE model...")
+            print(" Loading audio VAE...")
 
             if not os.path.exists(AUDIO_VAE_PATH):
                 raise FileNotFoundError(f"Model not found at {AUDIO_VAE_PATH}")
-            from app.audio_utils import SmallAudioVAE
-            with torch.serialization.add_safe_globals([SmallAudioVAE]):
+
+        # ✅ ADD DEBUGGING HERE
+            print("🔍 Debugging model file...")
+            try:
+                state_dict = torch.load(AUDIO_VAE_PATH, map_location='cpu')
+                print(f"Model type: {type(state_dict)}")
+                if isinstance(state_dict, dict):
+                    print(f"Keys: {list(state_dict.keys())[:10]}...")  # First 10 keys
+                else:
+                    print(f"Model class: {state_dict.__class__}")
+            except Exception as e:
+                print(f"❌ Debug load failed: {e}")
+        # ✅ END DEBUGGING
+
+            try:
+            
                 self._vae_model = torch.load(AUDIO_VAE_PATH, map_location=self.device)
                 self._vae_model.eval()
+                print("✅ Model loaded successfully!")
+            except Exception as e:
+                print(f"❌ Model load failed: {e}")
+            # Add more specific error handling
+                if "SmallAudioVAE" in str(e):
+                    print("⚠️ SmallAudioVAE class not found during loading")
+                    print("💡 Try loading as state dict instead...")
+                
         
-        print(" Audio VAE loaded!")
         return self._vae_model
     # -------------------------
     # Hartmann emotion classifier
