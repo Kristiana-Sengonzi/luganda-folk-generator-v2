@@ -129,6 +129,10 @@ def generate(
         clean_lyrics = extract_pure_lyrics(generated_lyrics)
         lyric_extractor = LyricEmotionExtractor()
         processed = lyric_extractor.process_lyrics(clean_lyrics)
+        print(f"Clean lyrics: {clean_lyrics}")
+        print(f"Processed result: {processed}")
+        print(f"Number of lines processed: {len(processed) if processed else 0}")
+
         durations, tempos, energies = lyric_extractor.get_audio_arrays(processed)
 
         # 4. Translate lyrics
