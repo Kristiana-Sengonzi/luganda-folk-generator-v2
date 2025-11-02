@@ -18,7 +18,7 @@ image = (
     )
     .pip_install_from_requirements("requirements.txt")
     
-    .add_local_dir(".", "/root") 
+    .add_local_dir(".", "/root",copy=True) 
    
     .run_function(
         download_all_models,
