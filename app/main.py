@@ -182,57 +182,24 @@ def generate(
 
         # 6. Save and denoise audio
         logger.info(" Processing audio...")
-        current_dir = os.getcwd()
+        current_dir = os.getcwd()  # Get current working directory
         audio_filename = os.path.join(current_dir, f"{uuid.uuid4()}.wav")
-        denoised_filename = audio_filename.replace(".wav", "_denoised.wav")
-
-        print(f" Original audio file: {audio_filename}")
-        print(f" Denoised audio file: {denoised_filename}")
-
         save_audio(waveform, audio_filename)
-        clean_audio = denoise_audio(audio_filename, denoised_filename)
-
-        print(f" denoise_audio returned: {clean_audio}")
-        print(f" Basename for URL: {os.path.basename(clean_audio)}")
-
+        clean_audio = denoise_audio(audio_filename, audio_filename.replace(".wav", "_denoised.wav"))
         logger.info(" Audio processing complete!")
-        print(f"Looking for audio file: {clean_audio}")
-        print(f"Current directory: {os.getcwd()}")
-        print(f"Files in current directory: {os.listdir('.')}")
-
-        # Check if the exact file exists
-        if os.path.exists(clean_audio):
-            print(f" Audio file exists: {clean_audio}")
-        else:
-            print(f" Audio file NOT FOUND: {clean_audio}")
-           # Check if file exists with just the basename
-           basename_only = os.path.basename(clean_audio)
-           if os.path.exists(basename_only):
-               print(f" File exists as: {basename_only}")
-
-        logger.info(" Generation complete!")
 
         return {
-        "story": story,
-        "lyrics_en": lyrics_en,
-        "lyrics_lg": lyrics_lg,
-        "audio_path": f"/audio/{os.path.basename(clean_audio)}"
-        }
-
+            "story": story,
+            "lyrics_en": lyrics_en,
+            "lyrics_lg": lyrics_lg,
+            "audio_path": f"/audio/{os.path.basename(clean_audio)}"
+}
 # -------------------------
 # Serve audio files
-@app.get("/audio/{filename}")
 def get_audio(filename: str):
-    """Serve generated audio files from current directory"""
-    # Files are now saved in current directory, not /tmp/
-    audio_path = filename  # Just the filename, since it's in current dir
-    
-    # Security check: ensure filename is safe
-    if '/' in filename or '..' in filename:
-        raise HTTPException(status_code=400, detail="Invalid filename")
-    
+    """Serve audio files from current working directory"""
+    current_dir = os.getcwd()
+    audio_path = os.path.join(current_dir, filename)
     if os.path.exists(audio_path):
         return FileResponse(audio_path, media_type="audio/wav", filename=filename)
-    
-    # Also check for files in current directory with the exact name
-    raise HTTPException(status_code=404, detail=f"Audio file {filename} not found")
+    raise HTTPException(status_code=404, detail="Audio file not found")
