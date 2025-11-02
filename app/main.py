@@ -181,27 +181,27 @@ def generate(
         )
 
         # 6. Save and denoise audio
-       logger.info(" Processing audio...")
-       current_dir = os.getcwd()
-       audio_filename = os.path.join(current_dir, f"{uuid.uuid4()}.wav")
-       clean_audio_filename = os.path.join(current_dir, f"{uuid.uuid4()}_denoised.wav")
+        logger.info(" Processing audio...")
+        current_dir = os.getcwd()
+        audio_filename = os.path.join(current_dir, f"{uuid.uuid4()}.wav")
+        clean_audio_filename = os.path.join(current_dir, f"{uuid.uuid4()}_denoised.wav")
 
-       # Save and denoise
-       save_audio(waveform, audio_filename)
-       denoise_audio(audio_filename, clean_audio_filename)
+        # Save and denoise
+        save_audio(waveform, audio_filename)
+        denoise_audio(audio_filename, clean_audio_filename)
 
-       # Clean up original file
-       if os.path.exists(audio_filename):
-           os.remove(audio_filename)
+        # Clean up original file
+        if os.path.exists(audio_filename):
+            os.remove(audio_filename)
 
-       logger.info(" Audio processing complete!")
+        logger.info(" Audio processing complete!")
 
-       return {
-           "story": story,
-           "lyrics_en": lyrics_en,
-           "lyrics_lg": lyrics_lg,
-           "audio_path": f"/audio/{os.path.basename(clean_audio_filename)}"
-              }
+        return {
+            "story": story,
+            "lyrics_en": lyrics_en,
+            "lyrics_lg": lyrics_lg,
+            "audio_path": f"/audio/{os.path.basename(clean_audio_filename)}"
+               }
     except Exception as e: 
         logger.error(f" Error during generation: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
