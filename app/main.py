@@ -165,15 +165,15 @@ def generate(
         save_audio(waveform, audio_filename)
         clean_audio = denoise_audio(audio_filename, audio_filename.replace(".wav", "_denoised.wav"))
         logger.info(" Audio processing complete!")
-        print(f"Looking for audio file: {clean_audio_filename}")
+        print(f"Looking for audio file: {clean_audio}")
         print(f"Current directory: {os.getcwd()}")
         print(f"Files in current directory: {os.listdir('.')}")
 
         try:
-            if os.path.exists(clean_audio_filename):
-                print(f" Audio file exists: {clean_audio_filename}")
+            if os.path.exists(clean_audio):
+                print(f" Audio file exists: {clean_audio}")
             else:
-                print(f" Audio file NOT FOUND: {clean_audio_filename}")
+                print(f" Audio file NOT FOUND: {clean_audio}")
 
         except Exception as e:
             print(f"Error checking file: {e}")
