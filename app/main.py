@@ -194,9 +194,9 @@ def generate(
             "lyrics_lg": lyrics_lg,
             "audio_path": f"/audio/{os.path.basename(clean_audio)}"
         }
-except Exception as e: 
-    logger.error(f" Error during generation: {str(e)}")
-    raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
+    except Exception as e: 
+        logger.error(f" Error during generation: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
 
 
 # -------------------------
