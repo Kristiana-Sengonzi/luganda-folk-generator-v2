@@ -123,17 +123,24 @@ def generate(
         
         generated_lyrics = vllm_manager.generate_lyrics(lyric_prompt)
         logger.info(" Lyrics generated!")
+        print("Raw lyrics length:", len(generated_lyrics))
+        print("Raw lyrics preview:", repr(generated_lyrics[:200]))  
 
         # 3. Process lyrics for emotion and audio generation
         logger.info(" Processing lyrics for audio...")
         clean_lyrics = extract_pure_lyrics(generated_lyrics)
+        print("Clean lyrics length:", len(clean_lyrics))
+        print("Clean lyrics preview:", repr(clean_lyrics[:200]))
         lyric_extractor = LyricEmotionExtractor()
-        processed = lyric_extractor.process_lyrics(clean_lyrics)
-        print(f"Clean lyrics: {clean_lyrics}")
-        print(f"Processed result: {processed}")
-        print(f"Number of lines processed: {len(processed) if processed else 0}")
+        try:
+            processed = lyric_extractor.process_lyrics(clean_lyrics)
+            print(f"Clean lyrics: {clean_lyrics}")
+            print(f"Processed result: {processed}")
+            print(f"Number of lines processed: {len(processed) if processed else 0}")
+            durations, tempos, energies = lyric_extractor.get_audio_arrays(processed)
 
-        durations, tempos, energies = lyric_extractor.get_audio_arrays(processed)
+        except Exception as e:
+            print(f"❌ Emotion extractor error: {e}")
 
         # 4. Translate lyrics
         logger.info(" Translating lyrics...")
