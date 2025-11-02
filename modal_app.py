@@ -39,6 +39,5 @@ image = (
 @modal.asgi_app()
 def fastapi_app():
     """ASGI app for web serving"""
-    from app.audio_utils import SmallAudioVAE
     from app.main import app as fastapi_app
     return fastapi_app
