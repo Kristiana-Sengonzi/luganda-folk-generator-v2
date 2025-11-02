@@ -182,36 +182,42 @@ def generate(
 
         # 6. Save and denoise audio
         logger.info(" Processing audio...")
-        audio_filename = f"{uuid.uuid4()}.wav"
+        current_dir = os.getcwd()
+        audio_filename = os.path.join(current_dir, f"{uuid.uuid4()}.wav")
+        denoised_filename = audio_filename.replace(".wav", "_denoised.wav")
+
+        print(f" Original audio file: {audio_filename}")
+        print(f" Denoised audio file: {denoised_filename}")
+
         save_audio(waveform, audio_filename)
-        clean_audio = denoise_audio(audio_filename, audio_filename.replace(".wav", "_denoised.wav"))
+        clean_audio = denoise_audio(audio_filename, denoised_filename)
+
+        print(f" denoise_audio returned: {clean_audio}")
+        print(f" Basename for URL: {os.path.basename(clean_audio)}")
+
         logger.info(" Audio processing complete!")
         print(f"Looking for audio file: {clean_audio}")
         print(f"Current directory: {os.getcwd()}")
         print(f"Files in current directory: {os.listdir('.')}")
 
-        try:
-            if os.path.exists(clean_audio):
-                print(f" Audio file exists: {clean_audio}")
-            else:
-                print(f" Audio file NOT FOUND: {clean_audio}")
-
-        except Exception as e:
-            print(f"Error checking file: {e}")
+        # Check if the exact file exists
+        if os.path.exists(clean_audio):
+            print(f" Audio file exists: {clean_audio}")
+        else:
+            print(f" Audio file NOT FOUND: {clean_audio}")
+           # Check if file exists with just the basename
+           basename_only = os.path.basename(clean_audio)
+           if os.path.exists(basename_only):
+               print(f" File exists as: {basename_only}")
 
         logger.info(" Generation complete!")
-        
-        return {
-            "story": story,
-            "lyrics_en": lyrics_en,
-            "lyrics_lg": lyrics_lg,
-            "audio_path": f"/audio/{os.path.basename(clean_audio)}" 
-        }
-        
-    except Exception as e:
-        logger.error(f" Error during generation: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
 
+        return {
+        "story": story,
+        "lyrics_en": lyrics_en,
+        "lyrics_lg": lyrics_lg,
+        "audio_path": f"/audio/{os.path.basename(clean_audio)}"
+        }
 
 # -------------------------
 # Serve audio files
