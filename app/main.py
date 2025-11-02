@@ -196,6 +196,7 @@ def generate(
 }
 # -------------------------
 # Serve audio files
+@app.get("/audio/{filename}")
 def get_audio(filename: str):
     """Serve audio files from current working directory"""
     current_dir = os.getcwd()
