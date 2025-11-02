@@ -54,36 +54,54 @@ class ModelsManager:
             if not os.path.exists(AUDIO_VAE_PATH):
                 raise FileNotFoundError(f"Model not found at {AUDIO_VAE_PATH}")
 
-        # ✅ ADD DEBUGGING HERE
-            print("🔍 Debugging model file...")
             try:
-                state_dict = torch.load(AUDIO_VAE_PATH, map_location='cpu')
-                print(f"Model type: {type(state_dict)}")
-                if isinstance(state_dict, dict):
-                    print(f"Keys: {list(state_dict.keys())[:10]}...")  # First 10 keys
-                else:
-                    print(f"Model class: {state_dict.__class__}")
-            except Exception as e:
-                print(f"❌ Debug load failed: {e}")
-        # ✅ END DEBUGGING
-
-            try:
+            #  FIX: Use add_safe_globals with the correct class path
+                from app.audio_utils import SmallAudioVAE
             
-                self._vae_model = torch.load(AUDIO_VAE_PATH, map_location=self.device)
+                with torch.serialization.add_safe_globals([SmallAudioVAE]):
+                    self._vae_model = torch.load(AUDIO_VAE_PATH, map_location=self.device)
+            
                 self._vae_model.eval()
-                print("✅ Model loaded successfully!")
+                print(" Model loaded successfully with safe_globals!")
+            
             except Exception as e:
-                print(f"❌ Model load failed: {e}")
-            # Add more specific error handling
-                if "SmallAudioVAE" in str(e):
-                    print("⚠️ SmallAudioVAE class not found during loading")
-                    print("💡 Try loading as state dict instead...")
-                
+                print(f" Model load failed: {e}")
+            # Fallback to state dict method
+                self._load_as_state_dict()
         
         return self._vae_model
-    # -------------------------
-    # Hartmann emotion classifier
-    # -------------------------
+
+    def _load_as_state_dict(self):
+        """Alternative loading method"""
+        try:
+            from app.audio_utils import SmallAudioVAE
+        
+            print(" Loading as state dict...")
+        
+        # Load just the state dict with weights_only=False
+            state_dict = torch.load(AUDIO_VAE_PATH, map_location=self.device, weights_only=False)
+        
+        # Create model instance
+            self._vae_model = SmallAudioVAE(
+            input_dim=16000*5,
+            latent_dim=32, 
+            num_instruments=6
+            )
+        
+        # If it's a full model object, extract state dict
+            if hasattr(state_dict, 'state_dict'):
+                state_dict = state_dict.state_dict()
+            elif isinstance(state_dict, dict) and 'state_dict' in state_dict:
+                state_dict = state_dict['state_dict']
+        
+            self._vae_model.load_state_dict(state_dict)
+            self._vae_model.to(self.device)
+            self._vae_model.eval()
+            print(" State dict load successful!")
+        
+        except Exception as e:
+            print(f" State dict load failed: {e}")
+            raise
     def load_hartmann_model(self):
         if self._hartmann_pipeline is None:
             print(" Loading Hartmann emotion classifier...")
