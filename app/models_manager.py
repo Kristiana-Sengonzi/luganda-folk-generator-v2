@@ -56,8 +56,9 @@ class ModelsManager:
         if self._vae_model is None:
             print(" Loading audio VAE...")
 
-            if not os.path.exists(AUDIO_VAE_PATH):
-                raise FileNotFoundError(f"Model not found at {AUDIO_VAE_PATH}")
+            import __main__
+            from app.audio_utils import SmallAudioVAE
+            __main__.SmallAudioVAE = SmallAudioVAE
 
             try:
             #  FIX: Use add_safe_globals with the correct class path
